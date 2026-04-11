@@ -1,0 +1,59 @@
+profiles:
+  focus:
+    displayName: Focus
+    description: Minimal setup for primary deep work
+    start:
+      - clawd-main
+      - next-main
+    stop:
+      - shopify-mcp
+      - context7-mcp
+      - mcp-medusa
+      - adobe-express-mcp
+      - comfyui-mcp
+
+  mcp:
+    displayName: MCP Stack
+    description: Launch main MCP servers
+    start:
+      - github-mcp
+      - shopify-mcp
+      - context7-mcp
+      - mcp-medusa
+    stop: []
+
+  fullstack:
+    displayName: Fullstack
+    description: Launch primary app stack plus MCPs
+    start:
+      - clawd-main
+      - next-main
+      - github-mcp
+      - shopify-mcp
+      - context7-mcp
+      - mcp-medusa
+    stop: []
+
+  all:
+    displayName: All Services
+    description: Launch every declared service from the local registry
+    start:
+      - clawd-main
+      - next-main
+      - github-mcp
+      - shopify-mcp
+      - context7-mcp
+      - mcp-medusa
+      - adobe-express-mcp
+      - comfyui-mcp
+    stop: []
+
+  recovery:
+    displayName: Recovery
+    description: Built-in action clean + relaunch focus profile
+    steps:
+      - doctor
+      - cleanDuplicates
+      - cleanZombies
+      - freePort4000
+      - profile:focus

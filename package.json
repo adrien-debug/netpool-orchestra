@@ -1,0 +1,63 @@
+{
+  "name": "orchestra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Desktop dev orchestrator for local stacks",
+  "main": "dist-electron/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\"",
+    "dev:renderer": "vite --port 3322 --strictPort",
+    "dev:electron": "wait-on tcp:3322 && tsc -p tsconfig.electron.json && electron .",
+    "build": "npm run build:renderer && npm run build:electron",
+    "build:renderer": "vite build",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "devctl": "tsx scripts/devctl.ts",
+    "auto-setup": "tsx scripts/auto-setup-services.ts",
+    "verify": "tsx scripts/verify.ts",
+    "dist": "npm run build && electron-builder",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.electron.json --noEmit"
+  },
+  "build": {
+    "appId": "dev.orchestra.app",
+    "productName": "Orchestra",
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "package.json",
+      "config/**"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": ["dmg", "zip"]
+    }
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "electron-store": "^10.0.1",
+    "execa": "^9.5.2",
+    "framer-motion": "^12.9.2",
+    "lucide-react": "^0.511.0",
+    "pidusage": "^3.0.2",
+    "ps-list": "^8.1.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "systeminformation": "^5.25.11",
+    "yaml": "^2.8.0",
+    "zod": "^3.25.28",
+    "zustand": "^5.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.17",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "electron": "^35.2.1",
+    "electron-builder": "^26.0.12",
+    "tsx": "^4.20.5",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "wait-on": "^8.0.3"
+  }
+}

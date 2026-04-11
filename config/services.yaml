@@ -1,0 +1,85 @@
+services:
+  clawd-main:
+    displayName: Clawd Main
+    kind: dev
+    cwd: /Users/adrienbeyondcrypto/Desktop/clawd-cursor-main
+    start: npm run dev:backend
+    stop: pkill -f "tsx watch src/index.ts start"
+    match:
+      - tsx watch src/index.ts start
+    maxInstances: 4
+    ports: []
+  next-main:
+    displayName: Next Main
+    kind: web
+    cwd: /Users/adrienbeyondcrypto/Desktop/clawd-cursor-main
+    start: npm run dev:frontend:wl-preview
+    stop: pkill -f "next dev"
+    match:
+      - next dev
+    maxInstances: 1
+    ports:
+      - 3010
+    healthCheck:
+      type: http
+      value: http://127.0.0.1:3010
+  github-mcp:
+    displayName: GitHub MCP
+    kind: mcp
+    optional: true
+    start: npx -y @modelcontextprotocol/server-github
+    stop: pkill -f "mcp-server-github"
+    match:
+      - mcp-server-github
+    maxInstances: 1
+    ports: []
+  shopify-mcp:
+    displayName: Shopify MCP
+    kind: mcp
+    optional: true
+    start: npx -y shopify-mcp
+    stop: pkill -f "shopify-mcp"
+    match:
+      - shopify-mcp
+    maxInstances: 1
+    ports: []
+  context7-mcp:
+    displayName: Context7 MCP
+    kind: mcp
+    optional: true
+    start: npx -y @upstash/context7-mcp@latest
+    stop: pkill -f "context7-mcp"
+    match:
+      - context7-mcp
+    maxInstances: 1
+    ports: []
+  mcp-medusa:
+    displayName: Medusa MCP
+    kind: mcp
+    optional: true
+    start: npx -y mcp-medusa
+    stop: pkill -f "mcp-medusa"
+    match:
+      - mcp-medusa
+    maxInstances: 1
+    ports: []
+  adobe-express-mcp:
+    displayName: Adobe Express MCP
+    kind: mcp
+    optional: true
+    start: npx -y adobe-express-add-on-mcp-server
+    stop: pkill -f "adobe-express-add-on-mcp-server"
+    match:
+      - adobe-express-add-on-mcp-server
+    maxInstances: 1
+    ports: []
+  comfyui-mcp:
+    displayName: ComfyUI MCP
+    kind: mcp
+    optional: true
+    start: npx -y comfyui-mcp
+    stop: pkill -f "comfyui-mcp"
+    match:
+      - comfyui-mcp
+    maxInstances: 1
+    ports: []

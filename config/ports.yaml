@@ -1,0 +1,43 @@
+ports:
+  - port: 3000
+    project: clawd-cursor-main / frontend
+  - port: 3001
+    project: clawd-cursor-main / marketing-standalone
+  - port: 3010
+    project: victor-next
+  - port: 3031
+    project: synaptech
+  - port: 3040
+    project: netpool (main)
+  - port: 3041
+    project: netpool sandbox frontend
+  - port: 3042
+    project: netpool sandbox backend
+  - port: 3050
+    project: onepeace-shop (monorepo clawd)
+  - port: 3051
+    project: onepiece-store
+  - port: 3052
+    project: one-piece-shop
+  - port: 3061
+    project: dropship storefront
+  - port: 3062
+    project: dropship admin
+  - port: 3063
+    project: dropship openclaw
+  - port: 3071
+    project: enzo live-trading
+  - port: 3081
+    project: hearst corporation
+  - port: 3091
+    project: nextjs-base
+  - port: 3322
+    project: orchestra (electron, inchange)
+  - port: 3848
+    project: clawd backend (inchange)
+  - port: 3849
+    project: clawd llm-gateway (inchange)
+  - port: 3850
+    project: clawd mcp (inchange)
+  - port: 9000
+    project: medusa (inchange)
