@@ -1,4 +1,4 @@
-import { Activity, AlertTriangle, Boxes, Command, Container, HelpCircle, Logs, Settings, Shield, Wrench } from "lucide-react";
+import { Activity, AlertTriangle, Boxes, Command, Container, HelpCircle, Loader, Logs, Settings, Shield, Wrench } from "lucide-react";
 import { useAppStore } from "@core/store";
 import { ToastContainer, ConfirmModal, LoadingBar } from "@ui/components";
 import { ChatPanel } from "@ui/ChatPanel";
@@ -20,6 +20,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const refresh = useAppStore((s) => s.refresh);
   const runAction = useAppStore((s) => s.runAction);
   const simpleMode = useAppStore((s) => s.simpleMode);
+  const actionInProgress = useAppStore((s) => s.actionInProgress);
 
   return (
     <main className="shell">
@@ -86,15 +87,31 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className="button button-secondary" 
               title="Force un scan complet de la machine (processus, ports, Docker, CPU, RAM)" 
               onClick={() => void runAction("doctor")}
+              disabled={actionInProgress === "doctor"}
             >
-              Scanner maintenant
+              {actionInProgress === "doctor" ? (
+                <>
+                  <Loader size={14} style={{ animation: "spin 1s linear infinite" }} />
+                  Scan en cours...
+                </>
+              ) : (
+                "Scanner maintenant"
+              )}
             </button>
             <button 
               className="button button-primary" 
               title="Nettoie les doublons, libère les ports en conflit, et relance le profil principal (action sécurisée)" 
               onClick={() => void runAction("repair-now")}
+              disabled={actionInProgress === "repair-now"}
             >
-              Réparer maintenant
+              {actionInProgress === "repair-now" ? (
+                <>
+                  <Loader size={14} style={{ animation: "spin 1s linear infinite" }} />
+                  Réparation...
+                </>
+              ) : (
+                "Réparer maintenant"
+              )}
             </button>
             {simpleMode ? (
               <button 

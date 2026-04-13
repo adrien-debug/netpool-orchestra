@@ -36,6 +36,7 @@ interface AppState {
   snapshot: RuntimeSnapshot;
   simpleMode: boolean;
   loading: boolean;
+  actionInProgress: string | null;
   toasts: Toast[];
   confirmDialog: ConfirmRequest | null;
   setPath: (path: string) => void;
@@ -61,6 +62,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   snapshot: emptySnapshot,
   simpleMode: initialSimpleMode,
   loading: false,
+  actionInProgress: null,
   toasts: [],
   confirmDialog: null,
 
@@ -108,14 +110,14 @@ export const useAppStore = create<AppState>((set, get) => ({
     const { addToast } = get();
 
     const executeAction = async () => {
-      set({ loading: true });
+      set({ loading: true, actionInProgress: actionId });
       try {
         const result = (await window.orchestra.runAction(actionId, payload)) as RuntimeActionResult | RuntimeSnapshot;
         if ("metrics" in result) {
-          set({ snapshot: result, loading: false });
+          set({ snapshot: result, loading: false, actionInProgress: null });
           addToast("Scan terminé.", "success");
         } else {
-          set({ loading: false });
+          set({ loading: false, actionInProgress: null });
           addToast(result.message ?? "Action exécutée.", result.ok ? "success" : "warning");
         }
 
@@ -126,7 +128,7 @@ export const useAppStore = create<AppState>((set, get) => ({
           } catch { /* noop */ }
         }
       } catch {
-        set({ loading: false });
+        set({ loading: false, actionInProgress: null });
         addToast(`Action échouée: ${actionId}`, "error");
       }
     };

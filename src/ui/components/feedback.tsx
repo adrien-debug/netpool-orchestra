@@ -35,8 +35,13 @@ export function ConfirmModal() {
   const clear = useAppStore((s) => s.clearConfirm);
   if (!dialog) return null;
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") clear();
+    if (e.key === "Enter") dialog.onConfirm();
+  };
+
   return (
-    <div className="modal-overlay" onClick={clear}>
+    <div className="modal-overlay" onClick={clear} onKeyDown={handleKeyDown}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
         <h3>{dialog.title}</h3>
         <p>{dialog.description}</p>

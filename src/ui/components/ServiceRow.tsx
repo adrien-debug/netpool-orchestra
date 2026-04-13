@@ -1,9 +1,11 @@
 import type { ServiceItem } from "@shared/types";
 import { useAppStore } from "@core/store";
 import { toneClass } from "../design";
+import { Loader } from "lucide-react";
 
 export function ServiceRow({ item }: { item: ServiceItem }) {
   const runAction = useAppStore((s) => s.runAction);
+  const actionInProgress = useAppStore((s) => s.actionInProgress);
 
   return (
     <div className="row grid-service">
@@ -30,22 +32,46 @@ export function ServiceRow({ item }: { item: ServiceItem }) {
           className="button button-ghost"
           title="Démarre ce service avec la commande configurée dans services.yaml"
           onClick={() => void runAction("service-start", { serviceId: item.id })}
+          disabled={actionInProgress === "service-start"}
         >
-          Démarrer
+          {actionInProgress === "service-start" ? (
+            <>
+              <Loader size={14} style={{ animation: "spin 1s linear infinite" }} />
+              Démarrage...
+            </>
+          ) : (
+            "Démarrer"
+          )}
         </button>
         <button
           className="button button-secondary"
           title="Arrête puis relance ce service"
           onClick={() => void runAction("service-restart", { serviceId: item.id })}
+          disabled={actionInProgress === "service-restart"}
         >
-          Redémarrer
+          {actionInProgress === "service-restart" ? (
+            <>
+              <Loader size={14} style={{ animation: "spin 1s linear infinite" }} />
+              Redémarrage...
+            </>
+          ) : (
+            "Redémarrer"
+          )}
         </button>
         <button
           className="button button-danger"
           title="Arrête uniquement ce service géré"
           onClick={() => void runAction("service-stop", { serviceId: item.id })}
+          disabled={actionInProgress === "service-stop"}
         >
-          Arrêter
+          {actionInProgress === "service-stop" ? (
+            <>
+              <Loader size={14} style={{ animation: "spin 1s linear infinite" }} />
+              Arrêt...
+            </>
+          ) : (
+            "Arrêter"
+          )}
         </button>
       </div>
     </div>
