@@ -116,19 +116,33 @@ export function OverviewPage() {
       <div className="split-grid">
         <Section title="Incidents actifs" description="Priorités détectées par le dernier scan.">
           <div className="stack">
-            {snapshot.alerts.map((item) => <AlertCard key={item.id} item={item} />)}
+            {snapshot.alerts.length === 0 ? (
+              <div className="tile" style={{ textAlign: "center", padding: "2rem", color: "#94a3b8" }}>
+                Aucune alerte détectée. Tout semble stable.
+              </div>
+            ) : (
+              snapshot.alerts.map((item) => <AlertCard key={item.id} item={item} />)
+            )}
           </div>
         </Section>
 
         <Section title="Services critiques" description="Aperçu rapide des services essentiels.">
           <div className="stack">
-            {criticalServices.slice(0, 3).map((item) => (
-              <ServiceRow key={item.id} item={item} />
-            ))}
-            {criticalServices.length > 3 && (
-              <a href="#/services" className="link-more">
-                Voir les {criticalServices.length} services →
-              </a>
+            {criticalServices.length === 0 ? (
+              <div className="tile" style={{ textAlign: "center", padding: "2rem", color: "#94a3b8" }}>
+                Aucun service critique configuré. Ajoute-les dans <code style={{ backgroundColor: "#1e293b", padding: "0.25rem 0.5rem", borderRadius: "4px" }}>config/services.yaml</code>.
+              </div>
+            ) : (
+              <>
+                {criticalServices.slice(0, 3).map((item) => (
+                  <ServiceRow key={item.id} item={item} />
+                ))}
+                {criticalServices.length > 3 && (
+                  <a href="#/services" className="link-more">
+                    Voir les {criticalServices.length} services →
+                  </a>
+                )}
+              </>
             )}
           </div>
         </Section>
@@ -136,11 +150,19 @@ export function OverviewPage() {
 
       <Section title="Docker" description="Conteneurs détectés sur la machine.">
         <div className="stack">
-          {snapshot.docker.slice(0, 3).map((item) => <DockerRow key={item.id} item={item} />)}
-          {snapshot.docker.length > 3 && (
-            <a href="#/docker" className="link-more">
-              Voir les {snapshot.docker.length} conteneurs →
-            </a>
+          {snapshot.docker.length === 0 ? (
+            <div className="tile" style={{ textAlign: "center", padding: "2rem", color: "#94a3b8" }}>
+              Aucun conteneur Docker détecté. Lance Docker Desktop pour voir tes conteneurs ici.
+            </div>
+          ) : (
+            <>
+              {snapshot.docker.slice(0, 3).map((item) => <DockerRow key={item.id} item={item} />)}
+              {snapshot.docker.length > 3 && (
+                <a href="#/docker" className="link-more">
+                  Voir les {snapshot.docker.length} conteneurs →
+                </a>
+              )}
+            </>
           )}
         </div>
       </Section>

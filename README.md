@@ -157,3 +157,22 @@ landing/               — Next.js landing page (Vercel)
 ## Safety
 
 The runtime avoids killing known protected app processes (Cursor/Electron/Docker Desktop/Finder/etc.) and targets only managed services. Destructive actions require user confirmation via modal dialog.
+
+## Recent Improvements
+
+### Stability & Robustness
+- **Timeout protection**: All shell commands now have 5-10s timeouts to prevent app freeze
+- **Queue overflow protection**: Action queue capped at 100 pending actions
+- **Event bus overflow protection**: Max 1000 total listeners, 100 per event
+- **Error boundary**: React error boundary catches and displays errors gracefully
+- **Backend validation**: Required env vars validated at startup, fails fast if missing
+
+### UX Enhancements
+- **Empty states**: Clear messages when no services/alerts/docker containers detected
+- **Tooltips**: Helpful tooltips on all critical actions (Scanner, Réparer, Récupération)
+- **AI Settings UI**: Configure OpenAI/Anthropic API keys directly in Settings page
+- **Better feedback**: Inline tooltips explain what each action does before clicking
+
+### Testing
+- 109 tests passing (config, process-utils, ports, logger, metrics-history, event-bus, action-queue, health, and more)
+- TypeScript strict mode with full type coverage

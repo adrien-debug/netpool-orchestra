@@ -465,7 +465,7 @@ async function freePort(port: number): Promise<RuntimeActionResult> {
   const managedPids = await getManagedPidSet(cfg);
 
   try {
-    const { stdout } = await execa("bash", ["-lc", `lsof -ti tcp:${port}`]);
+    const { stdout } = await execa("bash", ["-lc", `lsof -ti tcp:${port}`], { timeout: 5000 });
     const pids = stdout.split("\n").filter(Boolean).map(Number).filter((pid) => Number.isFinite(pid));
     const managedPortPids = pids.filter((pid) => managedPids.has(pid));
 
@@ -638,7 +638,7 @@ async function runRepairNow(): Promise<RuntimeActionResult> {
 
   for (const port of conflictPorts) {
     try {
-      const { stdout } = await execa("bash", ["-lc", `lsof -ti tcp:${port}`]);
+      const { stdout } = await execa("bash", ["-lc", `lsof -ti tcp:${port}`], { timeout: 5000 });
       const pids = stdout.split("\n").filter(Boolean).map(Number).filter((pid) => Number.isFinite(pid) && managedPids.has(pid));
       let killedCount = 0;
       for (const pid of pids) { if (await safeKillPid(pid, "repair.free-port")) killedCount += 1; }

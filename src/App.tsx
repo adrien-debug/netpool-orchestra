@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { commandActions } from "@shared/commands";
 import { useAppStore } from "@core/store";
 import { AppShell } from "@ui/AppShell";
+import { ErrorBoundary } from "@ui/ErrorBoundary";
 import { OverviewPage } from "@ui/pages/OverviewPage";
 import { ServicesPage } from "@ui/pages/ServicesPage";
 import { IncidentsPage } from "@ui/pages/IncidentsPage";
@@ -75,5 +76,9 @@ export function App() {
     return <OverviewPage />;
   })();
 
-  return <AppShell>{page}</AppShell>;
+  return (
+    <ErrorBoundary>
+      <AppShell>{page}</AppShell>
+    </ErrorBoundary>
+  );
 }

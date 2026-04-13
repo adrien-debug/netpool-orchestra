@@ -51,10 +51,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="sidebar-footer-title">Action recommandée</div>
           <p>Nettoyage sécurisé des doublons, libération des ports secondaires et relance du profil principal.</p>
           <div className="stack">
-            <button className="button button-secondary" onClick={() => void refresh()}>
+            <button 
+              className="button button-secondary" 
+              onClick={() => void refresh()}
+              title="Force un scan complet de la machine (processus, ports, Docker, CPU, RAM)"
+            >
               Scanner maintenant
             </button>
-            <button className="button button-primary" onClick={() => void runAction("repair-now")}>
+            <button 
+              className="button button-primary" 
+              onClick={() => void runAction("repair-now")}
+              title="Nettoie les doublons, libère les ports en conflit, et relance le profil principal"
+            >
               Réparer maintenant
             </button>
           </div>
@@ -69,23 +77,39 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <p>Voir ce qui tourne, ce qui bloque, et la prochaine action sûre à lancer.</p>
           </div>
           <div className="topbar-actions">
-            <button className="search-chip" title="Ouvrir le lanceur global" onClick={() => void window.orchestra.toggleLauncher()}>
+            <button className="search-chip" title="Ouvrir le lanceur global (Cmd+Shift+Space)" onClick={() => void window.orchestra.toggleLauncher()}>
               <Command size={15} />
               <span>Ouvrir le lanceur</span>
               <kbd>⌘⇧Space</kbd>
             </button>
-            <button className="button button-secondary" title="Scanner la machine et rafraîchir le tableau de bord" onClick={() => void runAction("doctor")}>
+            <button 
+              className="button button-secondary" 
+              title="Force un scan complet de la machine (processus, ports, Docker, CPU, RAM)" 
+              onClick={() => void runAction("doctor")}
+            >
               Scanner maintenant
             </button>
-            <button className="button button-primary" title="Nettoyage sécurisé + relance du profil principal" onClick={() => void runAction("repair-now")}>
+            <button 
+              className="button button-primary" 
+              title="Nettoie les doublons, libère les ports en conflit, et relance le profil principal (action sécurisée)" 
+              onClick={() => void runAction("repair-now")}
+            >
               Réparer maintenant
             </button>
             {simpleMode ? (
-              <button className="button button-ghost" title="Relancer le profil principal" onClick={() => void runAction("profile-run", { profileId: "focus" })}>
+              <button 
+                className="button button-ghost" 
+                title="Relance le profil 'focus' (start clawd-main + next-main, stop MCPs)" 
+                onClick={() => void runAction("profile-run", { profileId: "focus" })}
+              >
                 Relancer le profil
               </button>
             ) : (
-              <button className="button button-ghost" title="Récupération avancée (nettoyage complet)" onClick={() => void runAction("recovery-run")}>
+              <button 
+                className="button button-ghost" 
+                title="Récupération avancée : clean duplicates + clean zombies + free ports + relaunch focus (action destructive)" 
+                onClick={() => void runAction("recovery-run")}
+              >
                 Récupération avancée
               </button>
             )}

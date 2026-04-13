@@ -9,6 +9,26 @@ import { telemetryRouter } from "./routes/telemetry.js";
 import { updatesRouter } from "./routes/updates.js";
 import { billingRouter } from "./routes/billing.js";
 
+const REQUIRED_ENV_VARS = [
+  "SUPABASE_URL",
+  "SUPABASE_SERVICE_KEY",
+  "JWT_SECRET",
+  "GITHUB_CLIENT_ID",
+  "GITHUB_CLIENT_SECRET",
+  "STRIPE_SECRET_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+  "STRIPE_PRICE_PRO",
+  "STRIPE_PRICE_TEAM",
+  "FRONTEND_URL"
+];
+
+const missingVars = REQUIRED_ENV_VARS.filter((varName) => !process.env[varName]);
+if (missingVars.length > 0) {
+  console.error(`[orchestra-api] Missing required environment variables: ${missingVars.join(", ")}`);
+  console.error("[orchestra-api] Please check your .env file and ensure all required variables are set.");
+  process.exit(1);
+}
+
 const app = express();
 const PORT = parseInt(process.env.PORT || "4000", 10);
 

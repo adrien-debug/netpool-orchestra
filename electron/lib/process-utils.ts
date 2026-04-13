@@ -97,7 +97,7 @@ export function statusFromInstances(
 
 export async function listZombieFindCandidates() {
   try {
-    const { stdout } = await execa("bash", ["-lc", "ps -axo pid=,ppid=,stat=,comm=,etime="]);
+    const { stdout } = await execa("bash", ["-lc", "ps -axo pid=,ppid=,stat=,comm=,etime="], { timeout: 10000 });
     if (!stdout.trim()) return [];
 
     return stdout

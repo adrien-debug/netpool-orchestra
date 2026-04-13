@@ -16,7 +16,7 @@ export type PortRow = { name: string; pid: number; port: number };
 
 export async function listPorts(): Promise<PortRow[]> {
   try {
-    const { stdout } = await execa("bash", ["-lc", "lsof -nP -iTCP -sTCP:LISTEN | tail -n +2"]);
+    const { stdout } = await execa("bash", ["-lc", "lsof -nP -iTCP -sTCP:LISTEN | tail -n +2"], { timeout: 10000 });
     return stdout
       .split("\n")
       .map(parseLsofPort)

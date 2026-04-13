@@ -13,6 +13,7 @@ interface QueueEntry {
 class ActionQueue {
   private queue: QueueEntry[] = [];
   private running = false;
+  private readonly MAX_QUEUE_SIZE = 100;
 
   get pending() {
     return this.queue.length;
@@ -23,6 +24,9 @@ class ActionQueue {
   }
 
   async enqueue(actionId: string, fn: ActionFn): Promise<RuntimeActionResult | RuntimeSnapshot> {
+    if (this.queue.length >= this.MAX_QUEUE_SIZE) {
+      throw new Error(`Action queue overflow (max ${this.MAX_QUEUE_SIZE}). Too many pending actions.`);
+    }
     return new Promise<RuntimeActionResult | RuntimeSnapshot>((resolve, reject) => {
       this.queue.push({ fn, resolve, reject, actionId, enqueuedAt: Date.now() });
       void this.processNext();

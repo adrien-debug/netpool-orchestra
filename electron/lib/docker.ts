@@ -6,7 +6,7 @@ export async function listDockerContainers(): Promise<DockerItem[]> {
     const { stdout } = await execa("bash", [
       "-lc",
       "docker ps --format '{{.ID}}\t{{.Names}}\t{{.Image}}\t{{.State}}\t{{.Status}}'"
-    ]);
+    ], { timeout: 10000 });
 
     if (!stdout.trim()) return [];
 
