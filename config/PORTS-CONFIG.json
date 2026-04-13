@@ -1,0 +1,113 @@
+{
+  "$schema": "./ports-config.schema.json",
+  "version": "1.0.0",
+  "ports": {
+    "clawd-cursor-main": {
+      "backend": {
+        "name": "Clawd Backend",
+        "port": 3010,
+        "path": "/Users/adrienbeyondcrypto/Desktop/cursor-dev/clawd-cursor-main/backend",
+        "command": "npm run dev",
+        "healthCheck": "http://localhost:3010/health",
+        "env": {
+          "NODE_ENV": "development",
+          "PORT": "3010"
+        },
+        "dependencies": [],
+        "optional": false
+      },
+      "frontend": {
+        "name": "Clawd Frontend",
+        "port": 3000,
+        "path": "/Users/adrienbeyondcrypto/Desktop/cursor-dev/clawd-cursor-main/frontend",
+        "command": "npm run dev",
+        "healthCheck": "http://localhost:3000",
+        "env": {
+          "NODE_ENV": "development",
+          "PORT": "3000"
+        },
+        "dependencies": ["backend"],
+        "optional": false
+      }
+    },
+    "orchestra": {
+      "electron": {
+        "name": "Orchestra Electron",
+        "port": 3322,
+        "path": "/Users/adrienbeyondcrypto/Desktop/cursor-dev/_active/orchestra",
+        "command": "npm run dev",
+        "healthCheck": "http://localhost:3322",
+        "env": {
+          "NODE_ENV": "development"
+        },
+        "dependencies": ["backend"],
+        "optional": false
+      },
+      "backend": {
+        "name": "Orchestra Backend",
+        "port": 3011,
+        "path": "/Users/adrienbeyondcrypto/Desktop/cursor-dev/_active/orchestra/backend",
+        "command": "npm run dev",
+        "healthCheck": "http://localhost:3011/health",
+        "env": {
+          "NODE_ENV": "development",
+          "PORT": "3011"
+        },
+        "dependencies": [],
+        "optional": false
+      }
+    },
+    "landing": {
+      "nextjs": {
+        "name": "Landing Page",
+        "port": 3001,
+        "path": "/Users/adrienbeyondcrypto/Desktop/cursor-dev/_active/orchestra/landing",
+        "command": "npm run dev",
+        "healthCheck": "http://localhost:3001",
+        "env": {
+          "NODE_ENV": "development",
+          "PORT": "3001"
+        },
+        "dependencies": [],
+        "optional": true
+      }
+    }
+  },
+  "profiles": {
+    "full": {
+      "name": "Full Stack",
+      "description": "Tous les services (clawd + orchestra + landing)",
+      "services": [
+        "clawd-cursor-main.backend",
+        "clawd-cursor-main.frontend",
+        "orchestra.backend",
+        "orchestra.electron",
+        "landing.nextjs"
+      ]
+    },
+    "clawd-only": {
+      "name": "Clawd Only",
+      "description": "Uniquement Clawd (backend + frontend)",
+      "services": [
+        "clawd-cursor-main.backend",
+        "clawd-cursor-main.frontend"
+      ]
+    },
+    "orchestra-only": {
+      "name": "Orchestra Only",
+      "description": "Uniquement Orchestra (backend + electron)",
+      "services": [
+        "orchestra.backend",
+        "orchestra.electron"
+      ]
+    },
+    "minimal": {
+      "name": "Minimal",
+      "description": "Services critiques uniquement",
+      "services": [
+        "clawd-cursor-main.backend",
+        "orchestra.backend"
+      ]
+    }
+  }
+}
