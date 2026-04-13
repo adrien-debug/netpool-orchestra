@@ -7,3 +7,5 @@ logs/
 *.log
 .env
 .env.local
+.env.*
+config/TOKENS-CONFIG.json

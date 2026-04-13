@@ -9,9 +9,13 @@
       "tokens": {
         "auth": {
           "name": "Auth Token",
-          "value": "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",
+          "value": "",
           "envVar": "SENTRY_AUTH_TOKEN",
-          "scope": ["project:read", "project:write", "org:read"],
+          "scope": [
+            "project:read",
+            "project:write",
+            "org:read"
+          ],
           "expiresAt": null,
           "createdAt": "2025-02-10"
         },
@@ -19,7 +23,9 @@
           "name": "DSN (Data Source Name)",
           "value": "",
           "envVar": "SENTRY_DSN",
-          "scope": ["error:write"],
+          "scope": [
+            "error:write"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "À configurer après création du projet Sentry"
@@ -51,7 +57,9 @@
           "name": "Secret Key",
           "value": "",
           "envVar": "STRIPE_SECRET_KEY",
-          "scope": ["read_write"],
+          "scope": [
+            "read_write"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "Production: sk_live_... | Test: sk_test_..."
@@ -60,7 +68,9 @@
           "name": "Publishable Key",
           "value": "",
           "envVar": "STRIPE_PUBLISHABLE_KEY",
-          "scope": ["read_only"],
+          "scope": [
+            "read_only"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "Production: pk_live_... | Test: pk_test_..."
@@ -69,7 +79,9 @@
           "name": "Webhook Secret",
           "value": "",
           "envVar": "STRIPE_WEBHOOK_SECRET",
-          "scope": ["webhook"],
+          "scope": [
+            "webhook"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "whsec_..."
@@ -101,7 +113,9 @@
           "name": "Project URL",
           "value": "",
           "envVar": "SUPABASE_URL",
-          "scope": ["public"],
+          "scope": [
+            "public"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "https://xxxxx.supabase.co"
@@ -110,7 +124,10 @@
           "name": "Anon Key",
           "value": "",
           "envVar": "SUPABASE_ANON_KEY",
-          "scope": ["public", "read"],
+          "scope": [
+            "public",
+            "read"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "Public key for client-side"
@@ -119,7 +136,10 @@
           "name": "Service Role Key",
           "value": "",
           "envVar": "SUPABASE_SERVICE_KEY",
-          "scope": ["admin", "read_write"],
+          "scope": [
+            "admin",
+            "read_write"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "Secret key for server-side (bypasses RLS)"
@@ -143,7 +163,9 @@
           "name": "OAuth Client ID",
           "value": "",
           "envVar": "GITHUB_CLIENT_ID",
-          "scope": ["public"],
+          "scope": [
+            "public"
+          ],
           "expiresAt": null,
           "createdAt": null
         },
@@ -151,7 +173,9 @@
           "name": "OAuth Client Secret",
           "value": "",
           "envVar": "GITHUB_CLIENT_SECRET",
-          "scope": ["oauth"],
+          "scope": [
+            "oauth"
+          ],
           "expiresAt": null,
           "createdAt": null
         },
@@ -159,7 +183,10 @@
           "name": "Personal Access Token",
           "value": "",
           "envVar": "GITHUB_TOKEN",
-          "scope": ["repo", "read:user"],
+          "scope": [
+            "repo",
+            "read:user"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "ghp_..."
@@ -175,7 +202,9 @@
           "name": "API Key",
           "value": "",
           "envVar": "OPENAI_API_KEY",
-          "scope": ["api"],
+          "scope": [
+            "api"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "sk-..."
@@ -195,7 +224,9 @@
           "name": "API Key",
           "value": "",
           "envVar": "ANTHROPIC_API_KEY",
-          "scope": ["api"],
+          "scope": [
+            "api"
+          ],
           "expiresAt": null,
           "createdAt": null,
           "note": "sk-ant-..."
@@ -211,19 +242,36 @@
     "development": {
       "name": "Development",
       "description": "Local development environment",
-      "services": ["sentry", "stripe", "supabase", "github", "openai", "anthropic"],
+      "services": [
+        "sentry",
+        "stripe",
+        "supabase",
+        "github",
+        "openai",
+        "anthropic"
+      ],
       "envFile": ".env.development"
     },
     "staging": {
       "name": "Staging",
       "description": "Staging environment",
-      "services": ["sentry", "stripe", "supabase", "github"],
+      "services": [
+        "sentry",
+        "stripe",
+        "supabase",
+        "github"
+      ],
       "envFile": ".env.staging"
     },
     "production": {
       "name": "Production",
       "description": "Production environment",
-      "services": ["sentry", "stripe", "supabase", "github"],
+      "services": [
+        "sentry",
+        "stripe",
+        "supabase",
+        "github"
+      ],
       "envFile": ".env.production"
     }
   }
