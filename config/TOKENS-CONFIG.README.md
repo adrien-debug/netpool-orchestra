@@ -2,6 +2,23 @@
 
 Système de gestion centralisée des tokens et API keys pour Orchestra.
 
+## 🚀 Installation
+
+### Première utilisation
+
+```bash
+# Copier le template
+cp config/TOKENS-CONFIG.example.json config/TOKENS-CONFIG.json
+
+# Le fichier TOKENS-CONFIG.json est git-ignored pour la sécurité
+# Vous pouvez maintenant configurer vos tokens en toute sécurité
+```
+
+**Important** : 
+- `TOKENS-CONFIG.json` est dans `.gitignore` et ne sera **jamais commité**
+- Seul `TOKENS-CONFIG.example.json` (avec valeurs vides) est versionné
+- Chaque développeur doit créer son propre `TOKENS-CONFIG.json` local
+
 ## 📋 Structure
 
 ### `TOKENS-CONFIG.json`

@@ -174,6 +174,14 @@ npm run ports:minimal      # Critical services only
 
 ### Configuration Management
 
+**Setup** (première utilisation) :
+```bash
+# Copier le template de tokens
+cp config/TOKENS-CONFIG.example.json config/TOKENS-CONFIG.json
+
+# Note: TOKENS-CONFIG.json est git-ignored pour la sécurité
+```
+
 **Ports** : `config/PORTS-CONFIG.json`
 ```bash
 npm run ports:list         # List all services
@@ -181,7 +189,7 @@ npm run ports:profiles     # List all profiles
 npm run ports start <id>   # Start specific service
 ```
 
-**Tokens** : `config/TOKENS-CONFIG.json`
+**Tokens** : `config/TOKENS-CONFIG.json` (local, git-ignored)
 ```bash
 npm run tokens:list        # List all tokens
 npm run tokens:status      # Show configuration status

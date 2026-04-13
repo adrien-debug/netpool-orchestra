@@ -19,13 +19,22 @@ npm install
 
 ## ⚙️ Configuration
 
-### 1. Vérifier le statut
+### 1. Setup initial
+
+```bash
+# Copier le template de tokens
+cp config/TOKENS-CONFIG.example.json config/TOKENS-CONFIG.json
+
+# Note: TOKENS-CONFIG.json est git-ignored pour la sécurité
+```
+
+### 2. Vérifier le statut
 
 ```bash
 npm run tokens:status
 ```
 
-### 2. Configurer les tokens
+### 3. Configurer les tokens
 
 ```bash
 # Sentry
@@ -51,7 +60,7 @@ npm run tokens set openai api_key "sk-..."
 npm run tokens set anthropic api_key "sk-ant-..."
 ```
 
-### 3. Générer .env
+### 4. Générer .env
 
 ```bash
 # Development
