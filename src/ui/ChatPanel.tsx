@@ -12,9 +12,18 @@ export function ChatPanel() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
+  const [activeProvider, setActiveProvider] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const snapshot = useAppStore((s) => s.snapshot);
   const runAction = useAppStore((s) => s.runAction);
+
+  useEffect(() => {
+    if (!open || !window.orchestra?.ai) return;
+    window.orchestra.ai.listProviders().then((info) => {
+      const active = info.providers.find((p) => p.id === info.active);
+      setActiveProvider(active?.name ?? info.active);
+    }).catch(() => setActiveProvider(null));
+  }, [open]);
 
   const scrollToBottom = useCallback(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -137,6 +146,7 @@ Tu peux recommander des actions. Réponds en français, de manière concise et a
         <div className="chat-header-title">
           <MessageCircle size={16} />
           <span>Orchestra AI</span>
+          {activeProvider && <span className="chat-provider-badge">{activeProvider}</span>}
         </div>
         <button className="chat-close" onClick={() => setOpen(false)}><X size={16} /></button>
       </div>

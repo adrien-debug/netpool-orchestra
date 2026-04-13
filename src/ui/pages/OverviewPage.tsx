@@ -122,9 +122,14 @@ export function OverviewPage() {
 
         <Section title="Services critiques" description="Aperçu rapide des services essentiels.">
           <div className="stack">
-            {snapshot.services.filter((item) => !item.optional).slice(0, 3).map((item) => (
+            {criticalServices.slice(0, 3).map((item) => (
               <ServiceRow key={item.id} item={item} />
             ))}
+            {criticalServices.length > 3 && (
+              <a href="#/services" className="link-more">
+                Voir les {criticalServices.length} services →
+              </a>
+            )}
           </div>
         </Section>
       </div>
@@ -132,6 +137,11 @@ export function OverviewPage() {
       <Section title="Docker" description="Conteneurs détectés sur la machine.">
         <div className="stack">
           {snapshot.docker.slice(0, 3).map((item) => <DockerRow key={item.id} item={item} />)}
+          {snapshot.docker.length > 3 && (
+            <a href="#/docker" className="link-more">
+              Voir les {snapshot.docker.length} conteneurs →
+            </a>
+          )}
         </div>
       </Section>
     </div>

@@ -34,7 +34,6 @@ export interface ConfirmRequest {
 interface AppState {
   currentPath: string;
   snapshot: RuntimeSnapshot;
-  actionMessage: string | null;
   simpleMode: boolean;
   loading: boolean;
   toasts: Toast[];
@@ -60,7 +59,6 @@ const DESTRUCTIVE_ACTIONS = new Set([
 export const useAppStore = create<AppState>((set, get) => ({
   currentPath: "/",
   snapshot: emptySnapshot,
-  actionMessage: null,
   simpleMode: initialSimpleMode,
   loading: false,
   toasts: [],
@@ -92,14 +90,14 @@ export const useAppStore = create<AppState>((set, get) => ({
   refresh: async () => {
     if (!window.orchestra) {
       get().addToast("Backend local introuvable. Ouvre l'app dans Electron.", "error");
-      set({ snapshot: emptySnapshot, actionMessage: null });
+      set({ snapshot: emptySnapshot });
       return;
     }
 
     set({ loading: true });
     try {
       const snapshot = (await window.orchestra.getRuntimeSnapshot()) as RuntimeSnapshot;
-      set({ snapshot, actionMessage: null, loading: false });
+      set({ snapshot, loading: false });
     } catch {
       set({ snapshot: emptySnapshot, loading: false });
       get().addToast("Backend runtime injoignable.", "error");

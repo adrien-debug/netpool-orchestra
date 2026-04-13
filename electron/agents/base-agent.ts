@@ -10,6 +10,9 @@ export interface AgentConfig {
 
 export type AgentState = "idle" | "running" | "stopped" | "error";
 
+const MAX_CONSECUTIVE_ERRORS = 5;
+const ERROR_BACKOFF_MS = 5_000;
+
 export abstract class BaseAgent {
   readonly id: string;
   readonly name: string;
@@ -19,6 +22,8 @@ export abstract class BaseAgent {
   private _state: AgentState = "idle";
   private _timer: ReturnType<typeof setInterval> | null = null;
   private _unsubs: (() => void)[] = [];
+  private _consecutiveErrors = 0;
+  private _lastError: string | null = null;
 
   constructor(config: AgentConfig, bus: EventBus) {
     this.id = config.id;
@@ -28,10 +33,14 @@ export abstract class BaseAgent {
   }
 
   get state() { return this._state; }
+  get consecutiveErrors() { return this._consecutiveErrors; }
+  get lastError() { return this._lastError; }
 
   async start() {
     if (this._state === "running") return;
     this._state = "running";
+    this._consecutiveErrors = 0;
+    this._lastError = null;
     await this.onInit();
     this._timer = setInterval(() => void this.safeTick(), this.tickIntervalMs);
     this.bus.emit("agent:started", { agentId: this.id });
@@ -53,12 +62,34 @@ export abstract class BaseAgent {
   }
 
   private async safeTick() {
-    if (this._state !== "running") return;
+    if (this._state === "stopped") return;
+
+    if (this._state === "error") {
+      if (this._consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
+        return;
+      }
+      await new Promise((r) => setTimeout(r, ERROR_BACKOFF_MS * this._consecutiveErrors));
+      this._state = "running";
+      this.bus.emit("agent:recovering", { agentId: this.id, attempt: this._consecutiveErrors });
+    }
+
     try {
       await this.onTick();
+      if (this._consecutiveErrors > 0) {
+        this.bus.emit("agent:recovered", { agentId: this.id, afterErrors: this._consecutiveErrors });
+      }
+      this._consecutiveErrors = 0;
+      this._lastError = null;
     } catch (err) {
+      this._consecutiveErrors++;
+      this._lastError = err instanceof Error ? err.message : "Unknown error";
       this._state = "error";
-      this.bus.emit("agent:error", { agentId: this.id, error: err });
+      this.bus.emit("agent:error", {
+        agentId: this.id,
+        error: err,
+        consecutiveErrors: this._consecutiveErrors,
+        willRetry: this._consecutiveErrors < MAX_CONSECUTIVE_ERRORS
+      });
     }
   }
 

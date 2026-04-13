@@ -28,10 +28,34 @@ export function App() {
     sync();
     window.addEventListener("hashchange", sync);
     void refresh();
-    const poll = setInterval(() => void refresh(), 15_000);
+
+    let poll: ReturnType<typeof setInterval> | null = null;
+
+    const startPolling = () => {
+      if (poll) return;
+      poll = setInterval(() => void refresh(), 15_000);
+    };
+
+    const stopPolling = () => {
+      if (poll) { clearInterval(poll); poll = null; }
+    };
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        stopPolling();
+      } else {
+        void refresh();
+        startPolling();
+      }
+    };
+
+    startPolling();
+    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
+      stopPolling();
       window.removeEventListener("hashchange", sync);
-      clearInterval(poll);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [refresh, setPath]);
 

@@ -807,6 +807,27 @@ input {
   100% { background-position: -200% 0; }
 }
 
+.link-more {
+  display: block;
+  text-align: center;
+  padding: 8px;
+  color: var(--accent);
+  font-size: 13px;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+.link-more:hover { opacity: 1; }
+
+.chat-provider-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary, rgba(255, 255, 255, 0.5));
+  margin-left: 8px;
+}
+
 @media (max-width: 1200px) {
   .metrics-grid,
   .split-grid,

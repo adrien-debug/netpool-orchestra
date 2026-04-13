@@ -519,7 +519,10 @@ async function runProfile(profileId: string): Promise<RuntimeActionResult> {
         if (step === "doctor") { await getRuntimeSnapshot(); results.push({ ok: true, message: "doctor" }); continue; }
         if (step === "cleanDuplicates") { results.push(await cleanDuplicates()); continue; }
         if (step === "cleanZombies") { results.push(await cleanZombieFind()); continue; }
-        if (step === "freePort4000") { results.push(await freePort(4000)); continue; }
+        if (step.startsWith("freePort")) {
+          const portNum = parseInt(step.replace("freePort", ""), 10);
+          if (Number.isFinite(portNum) && portNum > 0) { results.push(await freePort(portNum)); continue; }
+        }
         if (step.startsWith("profile:")) { const next = step.split(":")[1]; if (next) results.push(await runProfile(next)); continue; }
       }
       if (typeof step === "object" && step) {
@@ -604,7 +607,11 @@ async function runRecovery(): Promise<RuntimeActionResult> {
   const steps: RuntimeActionResult[] = [];
   steps.push(await cleanDuplicates());
   steps.push(await cleanZombieFind());
-  steps.push(await freePort(4000));
+  const cfg = await readServiceConfig();
+  const webPorts = Object.values(cfg.services).flatMap((s) => s.ports);
+  for (const port of webPorts) {
+    steps.push(await freePort(port));
+  }
   await freeSecondaryWebPorts();
   steps.push(await runProfile("focus"));
 
@@ -676,7 +683,10 @@ export async function runNamedAction(
   return actionQueue.enqueue(actionId, async () => {
     if (actionId === "clean-duplicates") return cleanDuplicates();
     if (actionId === "clean-zombies") return cleanZombieFind();
-    if (actionId === "free-port") return freePort(payload.port ?? 4000);
+    if (actionId === "free-port") {
+      if (!payload.port) return { ok: false, message: "Missing port number." };
+      return freePort(payload.port);
+    }
     if (actionId === "service-start") return payload.serviceId ? startService(payload.serviceId) : { ok: false, message: "Missing serviceId." };
     if (actionId === "service-stop") return payload.serviceId ? stopService(payload.serviceId) : { ok: false, message: "Missing serviceId." };
     if (actionId === "service-restart") return payload.serviceId ? restartService(payload.serviceId) : { ok: false, message: "Missing serviceId." };

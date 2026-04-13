@@ -8,10 +8,13 @@ configRouter.post("/sync", async (req, res) => {
   const payload = verifyToken(req.headers.authorization as string | undefined);
   if (!payload) return res.status(401).json({ error: "Unauthorized" });
 
-  const body = req.body as { services?: string; profiles?: string; ports?: string };
+  const body = req.body as Record<string, unknown> | undefined;
+  if (!body || typeof body !== "object") {
+    return res.status(400).json({ error: "Missing body" });
+  }
 
   const { error } = await supabase.from("config_sync").upsert(
-    { user_id: payload.sub, config_data: JSON.stringify(body) },
+    { user_id: payload.sub, config_data: body },
     { onConflict: "user_id" }
   );
 
@@ -34,5 +37,10 @@ configRouter.get("/sync", async (req, res) => {
     .single();
 
   if (!data) return res.json({ services: null, profiles: null, ports: null });
-  return res.json(JSON.parse(data.config_data));
+
+  const configData = typeof data.config_data === "string"
+    ? JSON.parse(data.config_data)
+    : data.config_data;
+
+  return res.json(configData);
 });

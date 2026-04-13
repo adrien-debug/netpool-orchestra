@@ -17,7 +17,6 @@ const nav = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const currentPath = useAppStore((s) => s.currentPath);
-  const actionMessage = useAppStore((s) => s.actionMessage);
   const refresh = useAppStore((s) => s.refresh);
   const runAction = useAppStore((s) => s.runAction);
   const simpleMode = useAppStore((s) => s.simpleMode);
