@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { commandActions } from "@shared/commands";
 import { useAppStore } from "@core/store";
 import { AppShell } from "@ui/AppShell";
 import { ErrorBoundary } from "@ui/ErrorBoundary";
+import { Onboarding } from "@ui/components/Onboarding";
 import { OverviewPage } from "@ui/pages/OverviewPage";
 import { ServicesPage } from "@ui/pages/ServicesPage";
 import { IncidentsPage } from "@ui/pages/IncidentsPage";
@@ -12,6 +13,8 @@ import { LogsPage } from "@ui/pages/LogsPage";
 import { LauncherPage } from "@ui/pages/LauncherPage";
 import { SettingsPage } from "@ui/pages/SettingsPage";
 import { HowItWorksPage } from "@ui/pages/HowItWorksPage";
+import { AgentsPage } from "@ui/pages/AgentsPage";
+import { HistoryPage } from "@ui/pages/HistoryPage";
 
 function getPathFromHash() {
   const raw = window.location.hash.replace(/^#/, "");
@@ -23,6 +26,15 @@ export function App() {
   const setPath = useAppStore((s) => s.setPath);
   const refresh = useAppStore((s) => s.refresh);
   const simpleMode = useAppStore((s) => s.simpleMode);
+  
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return !localStorage.getItem("orchestra-onboarding-completed");
+  });
+
+  const handleOnboardingComplete = () => {
+    localStorage.setItem("orchestra-onboarding-completed", "true");
+    setShowOnboarding(false);
+  };
 
   useEffect(() => {
     const sync = () => setPath(getPathFromHash());
@@ -71,6 +83,8 @@ export function App() {
     if (effectivePath === "/docker") return <DockerPage />;
     if (effectivePath === "/logs") return <LogsPage />;
     if (effectivePath === "/launcher") return <LauncherPage actions={commandActions} />;
+    if (effectivePath === "/agents") return <AgentsPage />;
+    if (effectivePath === "/history") return <HistoryPage />;
     if (effectivePath === "/how-it-works") return <HowItWorksPage />;
     if (effectivePath === "/settings") return <SettingsPage />;
     return <OverviewPage />;
@@ -79,6 +93,7 @@ export function App() {
   return (
     <ErrorBoundary>
       <AppShell>{page}</AppShell>
+      {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
     </ErrorBoundary>
   );
 }

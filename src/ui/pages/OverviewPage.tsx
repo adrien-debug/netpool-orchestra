@@ -6,12 +6,10 @@ export function OverviewPage() {
   const runAction = useAppStore((s) => s.runAction);
 
   const criticalServices = snapshot.services.filter((item) => !item.optional);
-  const optionalServices = snapshot.services.filter((item) => item.optional);
   const healthy = criticalServices.filter((item) => item.status === "healthy").length;
   const degraded = criticalServices.filter((item) => item.status === "degraded").length;
   const duplicates = criticalServices.filter((item) => item.status === "duplicate").length;
   const stopped = criticalServices.filter((item) => item.status === "stopped").length;
-  const optionalStopped = optionalServices.filter((item) => item.status === "stopped").length;
   const conflictPorts = new Set(snapshot.ports.filter((p) => p.status === "conflict").map((p) => p.port)).size;
   const runtimeOk = snapshot.metrics.length > 0;
 
@@ -20,92 +18,86 @@ export function OverviewPage() {
       ? "ERREUR"
       : duplicates > 0 || degraded > 0 || stopped > 0 || conflictPorts > 0
         ? "ATTENTION"
-        : optionalStopped > 0
-          ? "PARTIEL"
-          : "OK";
+        : "OK";
 
   const overallHint =
     overallState === "ERREUR"
-      ? "Le backend local n’est pas joignable. Ouvre l’app dans Electron."
+      ? "Le backend local n'est pas joignable. Ouvre l'app dans Electron."
       : overallState === "ATTENTION"
         ? "Des services critiques ont un problème ou des ports sont en conflit."
-        : overallState === "PARTIEL"
-          ? "Seuls des services optionnels sont arrêtés."
-          : "Tout est stable côté services critiques.";
+        : "Tout est stable côté services critiques.";
 
   const recommendedAction: { label: string; actionId?: string; payload?: { profileId?: string } } =
     overallState === "ERREUR"
       ? { label: "Ouvrir dans Electron" }
       : overallState === "ATTENTION"
         ? { label: "Réparer maintenant", actionId: "repair-now" }
-        : overallState === "PARTIEL"
-          ? { label: "Lancer le profil complet", actionId: "profile-run", payload: { profileId: "fullstack" } }
-          : { label: "Scanner maintenant", actionId: "doctor" };
+        : { label: "Scanner maintenant", actionId: "doctor" };
 
   return (
     <div className="page-stack">
-      <Section title="Commencer ici" description="Résumé clair de ce qui marche, ce qui bloque et quoi cliquer en premier.">
+      <Section title="État Global" description="Résumé de ton environnement de dev local.">
         <div className="start-grid">
           <div className="info-card info-card-primary">
-            <div className="info-kicker">État global</div>
-            <div className="info-title">Statut: {overallState}</div>
-            <p>{overallHint}</p>
-            <p>
-              Critiques OK: {healthy}. Dégradés: {degraded}. Doublons: {duplicates}. Arrêtés: {stopped}.
-            </p>
-            <p>Ports en conflit: {conflictPorts}. Optionnels arrêtés: {optionalStopped}.</p>
-            <p>Données en direct du système local (pas de mock).</p>
+            <div className="info-kicker">Statut</div>
+            <div className="info-title">{overallState}</div>
+            <p style={{ marginBottom: "16px" }}>{overallHint}</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px", marginBottom: "16px", fontSize: "14px" }}>
+              <div>
+                <div style={{ color: "var(--text-secondary)", fontSize: "12px" }}>Services OK</div>
+                <div style={{ fontSize: "20px", fontWeight: 600, color: "var(--success)" }}>{healthy}</div>
+              </div>
+              <div>
+                <div style={{ color: "var(--text-secondary)", fontSize: "12px" }}>Problèmes</div>
+                <div style={{ fontSize: "20px", fontWeight: 600, color: "var(--danger)" }}>{degraded + duplicates + stopped}</div>
+              </div>
+              <div>
+                <div style={{ color: "var(--text-secondary)", fontSize: "12px" }}>Ports conflits</div>
+                <div style={{ fontSize: "20px", fontWeight: 600, color: conflictPorts > 0 ? "var(--warning)" : "var(--text-secondary)" }}>{conflictPorts}</div>
+              </div>
+              <div>
+                <div style={{ color: "var(--text-secondary)", fontSize: "12px" }}>Alertes</div>
+                <div style={{ fontSize: "20px", fontWeight: 600, color: snapshot.alerts.length > 0 ? "var(--warning)" : "var(--text-secondary)" }}>{snapshot.alerts.length}</div>
+              </div>
+            </div>
             {recommendedAction.actionId ? (
               <button
                 className="button button-primary"
+                style={{ width: "100%" }}
                 onClick={() => void runAction(recommendedAction.actionId!, recommendedAction.payload)}
               >
                 {recommendedAction.label}
               </button>
             ) : (
-              <div className="row-subtle">Ouvre l’app via npm run dev.</div>
+              <div className="row-subtle">Ouvre l'app via npm run dev.</div>
             )}
           </div>
 
           <div className="info-card">
-            <div className="info-kicker">Boutons principaux</div>
-            <ul className="info-list">
-              <li><strong>Scanner maintenant</strong>: re-scanne la machine et met à jour l’écran.</li>
-              <li><strong>Réparer maintenant</strong>: nettoie les doublons sûrs, libère les ports secondaires et relance le profil principal.</li>
-              <li><strong>Ouvrir le lanceur</strong>: palette d’actions rapide type Spotlight.</li>
-            </ul>
+            <div className="info-kicker">Actions Rapides</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <button
+                className="button button-secondary"
+                style={{ width: "100%", justifyContent: "flex-start" }}
+                onClick={() => void runAction("doctor")}
+              >
+                Scanner maintenant
+              </button>
+              <button
+                className="button button-secondary"
+                style={{ width: "100%", justifyContent: "flex-start" }}
+                onClick={() => void runAction("repair-now")}
+              >
+                Réparer maintenant
+              </button>
+              <a href="#/agents" className="button button-ghost" style={{ width: "100%", justifyContent: "flex-start", display: "flex" }}>
+                Voir les agents
+              </a>
+              <a href="#/history" className="button button-ghost" style={{ width: "100%", justifyContent: "flex-start", display: "flex" }}>
+                Voir l'historique
+              </a>
+            </div>
           </div>
-
-          <div className="info-card">
-            <div className="info-kicker">Boutons par service</div>
-            <ul className="info-list">
-              <li><strong>Démarrer</strong>: exécute la commande de démarrage configurée.</li>
-              <li><strong>Redémarrer</strong>: stoppe puis relance le service.</li>
-              <li><strong>Arrêter</strong>: stoppe uniquement ce service géré.</li>
-              <li><strong>Libérer le port</strong>: stoppe le process géré sur ce port.</li>
-            </ul>
-          </div>
-
-          <div className="info-card">
-            <div className="info-kicker">Ordre recommandé</div>
-            <ol className="info-list ordered">
-              <li>Cliquer <strong>Scanner maintenant</strong>.</li>
-              <li>Si doublons ou conflits, cliquer <strong>Réparer maintenant</strong>.</li>
-              <li>Vérifier que les services critiques passent en <strong>healthy</strong>.</li>
-              <li>Aller dans <strong>Services</strong> uniquement pour un contrôle fin.</li>
-            </ol>
-          </div>
-        </div>
-
-        <div className="legend-row">
-          <span className="badge tone-success">healthy</span>
-          <span className="legend-text">service actif et OK</span>
-          <span className="badge tone-warning">degraded</span>
-          <span className="legend-text">service actif mais check santé KO</span>
-          <span className="badge tone-danger">duplicate</span>
-          <span className="legend-text">trop d’instances</span>
-          <span className="badge tone-neutral">stopped</span>
-          <span className="legend-text">service arrêté</span>
         </div>
       </Section>
 
@@ -121,7 +113,12 @@ export function OverviewPage() {
                 Aucune alerte détectée. Tout semble stable.
               </div>
             ) : (
-              snapshot.alerts.map((item) => <AlertCard key={item.id} item={item} />)
+              snapshot.alerts.slice(0, 3).map((item) => <AlertCard key={item.id} item={item} />)
+            )}
+            {snapshot.alerts.length > 3 && (
+              <a href="#/incidents" className="link-more">
+                Voir les {snapshot.alerts.length} alertes →
+              </a>
             )}
           </div>
         </Section>

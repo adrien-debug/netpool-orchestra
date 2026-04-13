@@ -1,4 +1,4 @@
-import { Activity, AlertTriangle, Boxes, Command, Container, HelpCircle, Loader, Logs, Settings, Shield, Wrench } from "lucide-react";
+import { Activity, AlertTriangle, Boxes, Clock, Command, Container, HelpCircle, Loader, Logs, Settings, Shield, Wrench } from "lucide-react";
 import { useAppStore } from "@core/store";
 import { ToastContainer, ConfirmModal, LoadingBar } from "@ui/components";
 import { ChatPanel } from "@ui/ChatPanel";
@@ -11,6 +11,8 @@ const nav = [
   { path: "/docker", label: "Docker", icon: Container, advancedOnly: true },
   { path: "/launcher", label: "Lanceur", icon: Command, advancedOnly: true },
   { path: "/logs", label: "Journal", icon: Logs, advancedOnly: true },
+  { path: "/agents", label: "Agents", icon: Shield, advancedOnly: true },
+  { path: "/history", label: "Historique", icon: Clock, advancedOnly: true },
   { path: "/how-it-works", label: "Comment ça marche", icon: HelpCircle },
   { path: "/settings", label: "Réglages", icon: Settings }
 ];
