@@ -38,7 +38,13 @@ Desktop orchestrator for local dev stacks — Electron + React + TypeScript.
 ## Quick Start
 
 ```bash
+# Installation
 npm install
+
+# Vérifier la configuration
+npm run status
+
+# Lancer l'application
 npm run dev
 ```
 
@@ -81,15 +87,31 @@ npm run test:watch    # watch mode
 
 Update paths and commands to match your machine before using destructive actions.
 
-## Backend
+## Configuration
 
-Copy `backend/.env.example` to `backend/.env` and fill in your credentials:
+### Setup rapide
 
 ```bash
-cp backend/.env.example backend/.env
+# Configuration automatique (recommandé)
+npm run setup-services
+
+# Vérifier la configuration
+npm run check-env
 ```
 
-Required env vars: `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `JWT_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_PRO`, `STRIPE_PRICE_TEAM`, `FRONTEND_URL`.
+**Statut actuel :** 11/11 variables requises configurées ✅
+
+| Service | Statut | Variables |
+|---------|--------|-----------|
+| Stripe | ✅ Complet | 5/5 |
+| Supabase | ✅ Complet | 3/3 |
+| GitHub | ✅ Complet | 3/3 |
+| OpenAI | ⚠️ Optionnel | 0/1 |
+| Anthropic | ⚠️ Optionnel | 0/1 |
+
+**Guides :**
+- `CONFIGURATION.md` - Instructions détaillées par service
+- `CONFIG-STATUS.md` - État actuel de la configuration
 
 ## Architecture
 

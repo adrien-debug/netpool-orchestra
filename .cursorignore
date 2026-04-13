@@ -1,0 +1,27 @@
+# Build artifacts
+dist-electron/
+dist/
+landing/.next/
+build/
+
+# Dependencies
+node_modules/
+package-lock.json
+backend/package-lock.json
+landing/package-lock.json
+
+# Logs
+logs/
+*.log
+
+# Config docs (keep code, not prose)
+config/*.README.md
+
+# Landing build cache
+landing/.vercel/
+
+# Supabase temp
+backend/supabase/.temp/
+
+# Schemas (JSON Schema files — low value for LLM)
+config/*schema.json
