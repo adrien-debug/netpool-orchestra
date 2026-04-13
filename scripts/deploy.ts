@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-import { readFileSync, writeFileSync, existsSync } from "fs";
+import { readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { execa } from "execa";
@@ -107,13 +107,19 @@ async function checkTokensStatus(): Promise<boolean> {
 }
 
 async function generateEnvFiles(environment: string): Promise<void> {
-  log(`\n📝 Generating .env files for ${environment}...`, "blue");
+  const envMap: Record<string, string> = {
+    development: "dev",
+    staging: "staging",
+    production: "prod"
+  };
+  const scriptEnv = envMap[environment] ?? environment;
+  log(`\n📝 Generating .env files for ${scriptEnv}...`, "blue");
 
   try {
-    await execa("npm", ["run", `tokens:${environment}`]);
-    logSuccess(`.env.${environment} generated`);
+    await execa("npm", ["run", `tokens:${scriptEnv}`]);
+    logSuccess(`.env.${scriptEnv} generated`);
   } catch (error) {
-    logError(`Failed to generate .env.${environment}`);
+    logError(`Failed to generate .env.${scriptEnv}`);
     throw error;
   }
 }

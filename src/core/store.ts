@@ -109,6 +109,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   runAction: async (actionId, payload) => {
     const { addToast } = get();
 
+    if (!window.orchestra) {
+      addToast("Backend local introuvable. Ouvre l'app dans Electron.", "error");
+      return;
+    }
+
     const executeAction = async () => {
       set({ loading: true, actionInProgress: actionId });
       try {

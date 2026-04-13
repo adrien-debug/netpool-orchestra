@@ -13,8 +13,6 @@ const REQUIRED_ENV_VARS = [
   "SUPABASE_URL",
   "SUPABASE_SERVICE_KEY",
   "JWT_SECRET",
-  "GITHUB_CLIENT_ID",
-  "GITHUB_CLIENT_SECRET",
   "STRIPE_SECRET_KEY",
   "STRIPE_WEBHOOK_SECRET",
   "STRIPE_PRICE_PRO",
@@ -22,15 +20,27 @@ const REQUIRED_ENV_VARS = [
   "FRONTEND_URL"
 ];
 
-const missingVars = REQUIRED_ENV_VARS.filter((varName) => !process.env[varName]);
-if (missingVars.length > 0) {
-  console.error(`[orchestra-api] Missing required environment variables: ${missingVars.join(", ")}`);
+const OPTIONAL_ENV_VARS = [
+  "GITHUB_CLIENT_ID",
+  "GITHUB_CLIENT_SECRET",
+  "OPENAI_API_KEY",
+  "ANTHROPIC_API_KEY"
+];
+
+const missingRequired = REQUIRED_ENV_VARS.filter((v) => !process.env[v]);
+if (missingRequired.length > 0) {
+  console.error(`[orchestra-api] Missing required environment variables: ${missingRequired.join(", ")}`);
   console.error("[orchestra-api] Please check your .env file and ensure all required variables are set.");
   process.exit(1);
 }
 
+const missingOptional = OPTIONAL_ENV_VARS.filter((v) => !process.env[v]);
+if (missingOptional.length > 0) {
+  console.warn(`[orchestra-api] Optional env vars not set: ${missingOptional.join(", ")} — related features disabled`);
+}
+
 const app = express();
-const PORT = parseInt(process.env.PORT || "4000", 10);
+const PORT = parseInt(process.env.PORT || "3011", 10);
 
 app.use(cors());
 
@@ -72,6 +82,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.get("/", (_req, res) => {
   res.json({ ok: true, version: "0.1.0", service: "orchestra-api" });
+});
+
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
 });
 
 app.use("/auth", authRouter);

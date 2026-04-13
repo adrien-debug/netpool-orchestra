@@ -77,7 +77,7 @@ npm test              # run once
 npm run test:watch    # watch mode
 ```
 
-10 test suites, 109 tests covering: config parsing, process utils, ports, logger, metrics history, event bus, action queue, health checks, base agent (error recovery), AI router (fallback chain).
+13 test suites, 141 tests covering: config parsing, process utils, ports, logger, metrics history, event bus, action queue, health checks, base agent (error recovery), AI router (fallback chain), backend auth/billing.
 
 ## Config
 
@@ -272,7 +272,7 @@ The runtime avoids killing known protected app processes (Cursor/Electron/Docker
 - **Event bus overflow protection**: Max 1000 total listeners, 100 per event
 - **Error boundary**: React error boundary catches and displays errors gracefully
 - **Backend validation**: Required env vars validated at startup, fails fast if missing
-- **158 tests passing**: Runtime, agents, backend auth/billing fully tested
+- **141 tests passing**: Runtime, agents, backend auth/billing fully tested
 
 ### UX Enhancements (Phase 2)
 - **Interactive onboarding**: 8-step guided tour with keyboard navigation
