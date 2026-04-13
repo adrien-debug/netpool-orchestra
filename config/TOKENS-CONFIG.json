@@ -1,0 +1,230 @@
+{
+  "$schema": "./tokens-config.schema.json",
+  "version": "1.0.0",
+  "tokens": {
+    "sentry": {
+      "name": "Sentry",
+      "description": "Error tracking and monitoring",
+      "url": "https://sentry.io",
+      "tokens": {
+        "auth": {
+          "name": "Auth Token",
+          "value": "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",
+          "envVar": "SENTRY_AUTH_TOKEN",
+          "scope": ["project:read", "project:write", "org:read"],
+          "expiresAt": null,
+          "createdAt": "2025-02-10"
+        },
+        "dsn": {
+          "name": "DSN (Data Source Name)",
+          "value": "",
+          "envVar": "SENTRY_DSN",
+          "scope": ["error:write"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "À configurer après création du projet Sentry"
+        }
+      },
+      "projects": {
+        "orchestra": {
+          "name": "Orchestra",
+          "org": "adrien-debug",
+          "projectId": "",
+          "dsn": "",
+          "note": "À créer sur Sentry"
+        },
+        "clawd": {
+          "name": "Clawd",
+          "org": "adrien-debug",
+          "projectId": "",
+          "dsn": "",
+          "note": "À créer sur Sentry"
+        }
+      }
+    },
+    "stripe": {
+      "name": "Stripe",
+      "description": "Payment processing",
+      "url": "https://stripe.com",
+      "tokens": {
+        "secret": {
+          "name": "Secret Key",
+          "value": "",
+          "envVar": "STRIPE_SECRET_KEY",
+          "scope": ["read_write"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "Production: sk_live_... | Test: sk_test_..."
+        },
+        "publishable": {
+          "name": "Publishable Key",
+          "value": "",
+          "envVar": "STRIPE_PUBLISHABLE_KEY",
+          "scope": ["read_only"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "Production: pk_live_... | Test: pk_test_..."
+        },
+        "webhook": {
+          "name": "Webhook Secret",
+          "value": "",
+          "envVar": "STRIPE_WEBHOOK_SECRET",
+          "scope": ["webhook"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "whsec_..."
+        }
+      },
+      "products": {
+        "pro": {
+          "name": "Pro Plan",
+          "priceId": "",
+          "amount": 9.99,
+          "currency": "eur",
+          "interval": "month"
+        },
+        "team": {
+          "name": "Team Plan",
+          "priceId": "",
+          "amount": 29.99,
+          "currency": "eur",
+          "interval": "month"
+        }
+      }
+    },
+    "supabase": {
+      "name": "Supabase",
+      "description": "Backend as a Service",
+      "url": "https://supabase.com",
+      "tokens": {
+        "url": {
+          "name": "Project URL",
+          "value": "",
+          "envVar": "SUPABASE_URL",
+          "scope": ["public"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "https://xxxxx.supabase.co"
+        },
+        "anon": {
+          "name": "Anon Key",
+          "value": "",
+          "envVar": "SUPABASE_ANON_KEY",
+          "scope": ["public", "read"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "Public key for client-side"
+        },
+        "service": {
+          "name": "Service Role Key",
+          "value": "",
+          "envVar": "SUPABASE_SERVICE_KEY",
+          "scope": ["admin", "read_write"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "Secret key for server-side (bypasses RLS)"
+        }
+      },
+      "projects": {
+        "orchestra": {
+          "name": "Orchestra",
+          "projectId": "",
+          "region": "eu-central-1",
+          "database": "postgres"
+        }
+      }
+    },
+    "github": {
+      "name": "GitHub",
+      "description": "Version control and OAuth",
+      "url": "https://github.com",
+      "tokens": {
+        "oauth_client_id": {
+          "name": "OAuth Client ID",
+          "value": "",
+          "envVar": "GITHUB_CLIENT_ID",
+          "scope": ["public"],
+          "expiresAt": null,
+          "createdAt": null
+        },
+        "oauth_client_secret": {
+          "name": "OAuth Client Secret",
+          "value": "",
+          "envVar": "GITHUB_CLIENT_SECRET",
+          "scope": ["oauth"],
+          "expiresAt": null,
+          "createdAt": null
+        },
+        "personal_access": {
+          "name": "Personal Access Token",
+          "value": "",
+          "envVar": "GITHUB_TOKEN",
+          "scope": ["repo", "read:user"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "ghp_..."
+        }
+      }
+    },
+    "openai": {
+      "name": "OpenAI",
+      "description": "AI API",
+      "url": "https://platform.openai.com",
+      "tokens": {
+        "api_key": {
+          "name": "API Key",
+          "value": "",
+          "envVar": "OPENAI_API_KEY",
+          "scope": ["api"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "sk-..."
+        }
+      },
+      "models": {
+        "gpt4": "gpt-4-turbo-preview",
+        "gpt35": "gpt-3.5-turbo"
+      }
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "description": "Claude AI API",
+      "url": "https://console.anthropic.com",
+      "tokens": {
+        "api_key": {
+          "name": "API Key",
+          "value": "",
+          "envVar": "ANTHROPIC_API_KEY",
+          "scope": ["api"],
+          "expiresAt": null,
+          "createdAt": null,
+          "note": "sk-ant-..."
+        }
+      },
+      "models": {
+        "claude3": "claude-3-opus-20240229",
+        "claude2": "claude-2.1"
+      }
+    }
+  },
+  "environments": {
+    "development": {
+      "name": "Development",
+      "description": "Local development environment",
+      "services": ["sentry", "stripe", "supabase", "github", "openai", "anthropic"],
+      "envFile": ".env.development"
+    },
+    "staging": {
+      "name": "Staging",
+      "description": "Staging environment",
+      "services": ["sentry", "stripe", "supabase", "github"],
+      "envFile": ".env.staging"
+    },
+    "production": {
+      "name": "Production",
+      "description": "Production environment",
+      "services": ["sentry", "stripe", "supabase", "github"],
+      "envFile": ".env.production"
+    }
+  }
+}

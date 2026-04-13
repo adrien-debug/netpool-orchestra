@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tokens Configuration",
+  "description": "Configuration centralisée des tokens et API keys",
+  "type": "object",
+  "required": ["version", "tokens"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Version du schéma"
+    },
+    "tokens": {
+      "type": "object",
+      "description": "Configuration des services et leurs tokens",
+      "patternProperties": {
+        "^[a-z0-9-]+$": {
+          "type": "object",
+          "required": ["name", "description", "url", "tokens"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Nom du service"
+            },
+            "description": {
+              "type": "string",
+              "description": "Description du service"
+            },
+            "url": {
+              "type": "string",
+              "description": "URL du service"
+            },
+            "tokens": {
+              "type": "object",
+              "description": "Tokens du service",
+              "patternProperties": {
+                "^[a-z0-9_]+$": {
+                  "type": "object",
+                  "required": ["name", "value", "envVar"],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Nom du token"
+                    },
+                    "value": {
+                      "type": "string",
+                      "description": "Valeur du token (vide si à configurer)"
+                    },
+                    "envVar": {
+                      "type": "string",
+                      "description": "Nom de la variable d'environnement"
+                    },
+                    "scope": {
+                      "type": "array",
+                      "description": "Permissions du token",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "expiresAt": {
+                      "type": ["string", "null"],
+                      "description": "Date d'expiration (ISO 8601)"
+                    },
+                    "createdAt": {
+                      "type": ["string", "null"],
+                      "description": "Date de création (ISO 8601)"
+                    },
+                    "note": {
+                      "type": "string",
+                      "description": "Note ou instruction"
+                    }
+                  }
+                }
+              }
+            },
+            "projects": {
+              "type": "object",
+              "description": "Projets associés au service"
+            },
+            "products": {
+              "type": "object",
+              "description": "Produits associés au service"
+            },
+            "models": {
+              "type": "object",
+              "description": "Modèles associés au service"
+            }
+          }
+        }
+      }
+    },
+    "environments": {
+      "type": "object",
+      "description": "Environnements de déploiement",
+      "patternProperties": {
+        "^[a-z0-9-]+$": {
+          "type": "object",
+          "required": ["name", "description", "services", "envFile"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Nom de l'environnement"
+            },
+            "description": {
+              "type": "string",
+              "description": "Description de l'environnement"
+            },
+            "services": {
+              "type": "array",
+              "description": "Services utilisés dans cet environnement",
+              "items": {
+                "type": "string"
+              }
+            },
+            "envFile": {
+              "type": "string",
+              "description": "Fichier .env associé"
+            }
+          }
+        }
+      }
+    }
+  }
+}
