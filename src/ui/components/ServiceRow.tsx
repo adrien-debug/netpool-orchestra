@@ -1,9 +1,10 @@
+import { memo } from "react";
 import type { ServiceItem } from "@shared/types";
 import { useAppStore } from "@core/store";
 import { toneClass } from "../design";
 import { Loader } from "lucide-react";
 
-export function ServiceRow({ item }: { item: ServiceItem }) {
+export const ServiceRow = memo(function ServiceRow({ item }: { item: ServiceItem }) {
   const runAction = useAppStore((s) => s.runAction);
   const actionInProgress = useAppStore((s) => s.actionInProgress);
 
@@ -76,4 +77,4 @@ export function ServiceRow({ item }: { item: ServiceItem }) {
       </div>
     </div>
   );
-}
+});

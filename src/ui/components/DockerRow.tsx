@@ -1,7 +1,8 @@
+import { memo } from "react";
 import type { DockerItem } from "@shared/types";
 import { toneClass } from "../design";
 
-export function DockerRow({ item }: { item: DockerItem }) {
+export const DockerRow = memo(function DockerRow({ item }: { item: DockerItem }) {
   const tone = item.state.toLowerCase().includes("running") ? "success" : "warning";
   return (
     <div className="row grid-docker">
@@ -14,4 +15,4 @@ export function DockerRow({ item }: { item: DockerItem }) {
       <div className="row-subtle">{item.status}</div>
     </div>
   );
-}
+});

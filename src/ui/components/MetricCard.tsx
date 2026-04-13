@@ -1,7 +1,8 @@
+import { memo } from "react";
 import type { MetricItem } from "@shared/types";
 import { toneClass } from "../design";
 
-export function MetricCard({ item }: { item: MetricItem }) {
+export const MetricCard = memo(function MetricCard({ item }: { item: MetricItem }) {
   return (
     <div className={`metric-card ${toneClass[item.tone]}`}>
       <div className="metric-label">{item.label}</div>
@@ -9,4 +10,4 @@ export function MetricCard({ item }: { item: MetricItem }) {
       {item.hint ? <div className="metric-hint">{item.hint}</div> : null}
     </div>
   );
-}
+});

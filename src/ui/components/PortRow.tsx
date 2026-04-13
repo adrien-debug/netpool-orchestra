@@ -1,8 +1,9 @@
+import { memo } from "react";
 import type { PortItem } from "@shared/types";
 import { useAppStore } from "@core/store";
 import { toneClass } from "../design";
 
-export function PortRow({ item }: { item: PortItem }) {
+export const PortRow = memo(function PortRow({ item }: { item: PortItem }) {
   const runAction = useAppStore((s) => s.runAction);
   const tone = item.status === "conflict" ? "danger" : item.status === "ok" ? "success" : "neutral";
   const isFree = item.status === "free";
@@ -27,4 +28,4 @@ export function PortRow({ item }: { item: PortItem }) {
       </div>
     </div>
   );
-}
+});

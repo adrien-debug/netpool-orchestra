@@ -1,7 +1,8 @@
+import { memo } from "react";
 import type { LogItem } from "@shared/types";
 import { toneClass } from "../design";
 
-export function LogRow({ item }: { item: LogItem }) {
+export const LogRow = memo(function LogRow({ item }: { item: LogItem }) {
   const tone = item.level === "error" ? "danger" : item.level === "warn" ? "warning" : item.level === "success" ? "success" : "info";
   return (
     <div className="row grid-log">
@@ -13,4 +14,4 @@ export function LogRow({ item }: { item: LogItem }) {
       <div className="mono subtle">{item.scope}</div>
     </div>
   );
-}
+});

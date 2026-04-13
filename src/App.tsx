@@ -1,20 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, lazy, Suspense } from "react";
 import { commandActions } from "@shared/commands";
 import { useAppStore } from "@core/store";
 import { AppShell } from "@ui/AppShell";
 import { ErrorBoundary } from "@ui/ErrorBoundary";
 import { Onboarding } from "@ui/components/Onboarding";
 import { OverviewPage } from "@ui/pages/OverviewPage";
-import { ServicesPage } from "@ui/pages/ServicesPage";
-import { IncidentsPage } from "@ui/pages/IncidentsPage";
-import { PortsPage } from "@ui/pages/PortsPage";
-import { DockerPage } from "@ui/pages/DockerPage";
-import { LogsPage } from "@ui/pages/LogsPage";
-import { LauncherPage } from "@ui/pages/LauncherPage";
-import { SettingsPage } from "@ui/pages/SettingsPage";
-import { HowItWorksPage } from "@ui/pages/HowItWorksPage";
-import { AgentsPage } from "@ui/pages/AgentsPage";
-import { HistoryPage } from "@ui/pages/HistoryPage";
+
+// Lazy load pages that are not immediately needed
+const ServicesPage = lazy(() => import("@ui/pages/ServicesPage").then(m => ({ default: m.ServicesPage })));
+const IncidentsPage = lazy(() => import("@ui/pages/IncidentsPage").then(m => ({ default: m.IncidentsPage })));
+const PortsPage = lazy(() => import("@ui/pages/PortsPage").then(m => ({ default: m.PortsPage })));
+const DockerPage = lazy(() => import("@ui/pages/DockerPage").then(m => ({ default: m.DockerPage })));
+const LogsPage = lazy(() => import("@ui/pages/LogsPage").then(m => ({ default: m.LogsPage })));
+const LauncherPage = lazy(() => import("@ui/pages/LauncherPage").then(m => ({ default: m.LauncherPage })));
+const SettingsPage = lazy(() => import("@ui/pages/SettingsPage").then(m => ({ default: m.SettingsPage })));
+const HowItWorksPage = lazy(() => import("@ui/pages/HowItWorksPage").then(m => ({ default: m.HowItWorksPage })));
+const AgentsPage = lazy(() => import("@ui/pages/AgentsPage").then(m => ({ default: m.AgentsPage })));
+const HistoryPage = lazy(() => import("@ui/pages/HistoryPage").then(m => ({ default: m.HistoryPage })));
 
 function getPathFromHash() {
   const raw = window.location.hash.replace(/^#/, "");
@@ -72,11 +74,14 @@ export function App() {
     };
   }, [refresh, setPath]);
 
-  const effectivePath = simpleMode && ["/services", "/incidents", "/ports", "/docker", "/logs", "/launcher"].includes(currentPath)
-    ? "/"
-    : currentPath;
+  const effectivePath = useMemo(() => 
+    simpleMode && ["/services", "/incidents", "/ports", "/docker", "/logs", "/launcher"].includes(currentPath)
+      ? "/"
+      : currentPath,
+    [simpleMode, currentPath]
+  );
 
-  const page = (() => {
+  const page = useMemo(() => {
     if (effectivePath === "/services") return <ServicesPage />;
     if (effectivePath === "/incidents") return <IncidentsPage />;
     if (effectivePath === "/ports") return <PortsPage />;
@@ -88,11 +93,15 @@ export function App() {
     if (effectivePath === "/how-it-works") return <HowItWorksPage />;
     if (effectivePath === "/settings") return <SettingsPage />;
     return <OverviewPage />;
-  })();
+  }, [effectivePath]);
 
   return (
     <ErrorBoundary>
-      <AppShell>{page}</AppShell>
+      <AppShell>
+        <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center", color: "var(--text-secondary)" }}>Chargement...</div>}>
+          {page}
+        </Suspense>
+      </AppShell>
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
     </ErrorBoundary>
   );

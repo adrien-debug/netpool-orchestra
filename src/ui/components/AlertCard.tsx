@@ -1,8 +1,9 @@
+import { memo } from "react";
 import { AlertTriangle } from "lucide-react";
 import type { AlertItem } from "@shared/types";
 import { useAppStore } from "@core/store";
 
-export function AlertCard({ item }: { item: AlertItem }) {
+export const AlertCard = memo(function AlertCard({ item }: { item: AlertItem }) {
   const runAction = useAppStore((s) => s.runAction);
 
   let actionId: string = item.actionId ?? "doctor";
@@ -39,4 +40,4 @@ export function AlertCard({ item }: { item: AlertItem }) {
       ) : null}
     </div>
   );
-}
+});
