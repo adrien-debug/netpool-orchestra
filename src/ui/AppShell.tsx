@@ -1,5 +1,7 @@
 import { Activity, AlertTriangle, Boxes, Command, Container, HelpCircle, Logs, Settings, Shield, Wrench } from "lucide-react";
 import { useAppStore } from "@core/store";
+import { ToastContainer, ConfirmModal, LoadingBar } from "@ui/components";
+import { ChatPanel } from "@ui/ChatPanel";
 
 const nav = [
   { path: "/", label: "Accueil", icon: Activity },
@@ -91,9 +93,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {actionMessage ? <div className="notice">{actionMessage}</div> : null}
         {children}
       </section>
+      <LoadingBar />
+      <ToastContainer />
+      <ConfirmModal />
+      <ChatPanel />
     </main>
   );
 }

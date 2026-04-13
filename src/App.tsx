@@ -28,7 +28,11 @@ export function App() {
     sync();
     window.addEventListener("hashchange", sync);
     void refresh();
-    return () => window.removeEventListener("hashchange", sync);
+    const poll = setInterval(() => void refresh(), 15_000);
+    return () => {
+      window.removeEventListener("hashchange", sync);
+      clearInterval(poll);
+    };
   }, [refresh, setPath]);
 
   const effectivePath = simpleMode && ["/services", "/incidents", "/ports", "/docker", "/logs", "/launcher"].includes(currentPath)
