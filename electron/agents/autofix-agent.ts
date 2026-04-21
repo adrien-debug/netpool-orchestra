@@ -185,8 +185,14 @@ export class AutoFixAgent extends BaseAgent {
 
     try {
       const result = await rule.action();
-      log.success = result.ok;
-      log.message = result.message;
+      
+      if ("metrics" in result) {
+        log.success = true;
+        log.message = "Scan completed";
+      } else {
+        log.success = result.ok;
+        log.message = result.message;
+      }
 
       if (result.ok) {
         this.consecutiveFailures = 0;

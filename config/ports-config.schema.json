@@ -1,98 +1,53 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Ports Configuration",
-  "description": "Configuration des ports et services pour Orchestra",
+  "description": "Configuration for services, ports, and profiles",
   "type": "object",
-  "required": ["version", "ports"],
   "properties": {
-    "version": {
-      "type": "string",
-      "description": "Version du schéma"
-    },
-    "ports": {
+    "services": {
       "type": "object",
-      "description": "Configuration des projets et leurs services",
-      "patternProperties": {
-        "^[a-z0-9-]+$": {
-          "type": "object",
-          "description": "Projet",
-          "patternProperties": {
-            "^[a-z0-9-]+$": {
-              "type": "object",
-              "description": "Service",
-              "required": ["name", "port", "path", "command"],
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Nom du service"
-                },
-                "port": {
-                  "type": "number",
-                  "description": "Port du service"
-                },
-                "path": {
-                  "type": "string",
-                  "description": "Chemin absolu vers le service"
-                },
-                "command": {
-                  "type": "string",
-                  "description": "Commande de démarrage"
-                },
-                "healthCheck": {
-                  "type": "string",
-                  "description": "URL de health check"
-                },
-                "env": {
-                  "type": "object",
-                  "description": "Variables d'environnement",
-                  "additionalProperties": {
-                    "type": "string"
-                  }
-                },
-                "dependencies": {
-                  "type": "array",
-                  "description": "Services dont ce service dépend",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "optional": {
-                  "type": "boolean",
-                  "description": "Service optionnel ou critique"
-                }
-              }
-            }
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "command": { "type": "string" },
+          "port": { "type": "number" },
+          "env": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "healthCheck": {
+            "type": "object",
+            "properties": {
+              "type": { "enum": ["http", "tcp", "process"] },
+              "url": { "type": "string" },
+              "timeout": { "type": "number" }
+            },
+            "required": ["type"]
+          },
+          "dependencies": {
+            "type": "array",
+            "items": { "type": "string" }
           }
-        }
+        },
+        "required": ["name", "path", "command"]
       }
     },
     "profiles": {
       "type": "object",
-      "description": "Profils de démarrage",
-      "patternProperties": {
-        "^[a-z0-9-]+$": {
-          "type": "object",
-          "required": ["name", "description", "services"],
-          "properties": {
-            "name": {
-              "type": "string",
-              "description": "Nom du profil"
-            },
-            "description": {
-              "type": "string",
-              "description": "Description du profil"
-            },
-            "services": {
-              "type": "array",
-              "description": "Liste des services à démarrer",
-              "items": {
-                "type": "string",
-                "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+$"
-              }
-            }
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "services": {
+            "type": "array",
+            "items": { "type": "string" }
           }
-        }
+        },
+        "required": ["name", "services"]
       }
     }
-  }
+  },
+  "required": ["services", "profiles"]
 }

@@ -150,14 +150,11 @@ async function buildProject(): Promise<boolean> {
   }
 }
 
-async function deployBackend(environment: string): Promise<boolean> {
+async function deployBackend(): Promise<boolean> {
   log("\n🚂 Deploying backend to Railway...", "blue");
 
   try {
-    // Check if Railway is available
     await execa("railway", ["--version"]);
-
-    // Deploy
     await execa("railway", ["up"], {
       cwd: resolve(__dirname, "../backend"),
       stdio: "inherit"
@@ -172,15 +169,12 @@ async function deployBackend(environment: string): Promise<boolean> {
   }
 }
 
-async function deployFrontend(environment: string): Promise<boolean> {
+async function deployFrontend(): Promise<boolean> {
   log("\n🌐 Deploying frontend to Vercel...", "blue");
 
   try {
-    // Check if Vercel is available
     await execa("vercel", ["--version"]);
-
-    // Deploy
-    const args = environment === "production" ? ["--prod"] : [];
+    const args = ["--prod"];
     await execa("vercel", args, {
       cwd: resolve(__dirname, "../landing"),
       stdio: "inherit"
@@ -275,23 +269,33 @@ async function deploy(config: DeployConfig): Promise<void> {
     }
 
     // Step 4: Tests
-    logStep(4, 8, "Running tests");
-    results["Tests"] = await runTests();
+    if (config.checks.includes("tests")) {
+      logStep(4, 8, "Running tests");
+      results["Tests"] = await runTests();
+    } else {
+      logWarning("Skipping tests (--skip-tests)");
+      results["Tests"] = true;
+    }
 
     // Step 5: Build
-    logStep(5, 8, "Building project");
-    results["Build"] = await buildProject();
+    if (config.checks.includes("build")) {
+      logStep(5, 8, "Building project");
+      results["Build"] = await buildProject();
+    } else {
+      logWarning("Skipping build (--skip-build)");
+      results["Build"] = true;
+    }
 
     // Step 6: Deploy Backend
     if (config.services.includes("backend")) {
       logStep(6, 8, "Deploying backend");
-      results["Backend Deployment"] = await deployBackend(config.environment);
+      results["Backend Deployment"] = await deployBackend();
     }
 
     // Step 7: Deploy Frontend
     if (config.services.includes("frontend")) {
       logStep(7, 8, "Deploying frontend");
-      results["Frontend Deployment"] = await deployFrontend(config.environment);
+      results["Frontend Deployment"] = await deployFrontend();
     }
 
     // Step 8: Git Push

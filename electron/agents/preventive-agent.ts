@@ -116,6 +116,7 @@ export class PreventiveAgent extends BaseAgent {
 
   private checkPortConflicts(snapshot: RuntimeSnapshot) {
     const conflicting = new Set(snapshot.ports.filter((p) => p.status === "conflict").map((p) => p.port));
+    
     for (const port of conflicting) {
       this.raiseAlert({
         id: `port-conflict-${port}`,
@@ -125,6 +126,15 @@ export class PreventiveAgent extends BaseAgent {
         severity: "warning",
         timestamp: Date.now()
       });
+    }
+    
+    for (const [alertId] of this.activeAlerts) {
+      if (alertId.startsWith("port-conflict-")) {
+        const port = parseInt(alertId.replace("port-conflict-", ""), 10);
+        if (!conflicting.has(port)) {
+          this.resolveAlert(alertId);
+        }
+      }
     }
   }
 

@@ -1,21 +1,8 @@
 import { describe, it, expect, beforeEach } from "vitest";
+import { MetricsHistory } from "../electron/lib/metrics-history.js";
+import type { MetricPoint } from "../electron/lib/metrics-history.js";
 
-// We test MetricsHistory by importing the class directly. The singleton
-// depends on rootDir (filesystem), but the class logic is pure in-memory.
-// We extract and re-instantiate to avoid side effects.
-
-interface MetricPoint {
-  ts: number;
-  cpu: number;
-  ramAvailableGB: number;
-  ramPressurePct: number;
-  nodeProcesses: number;
-  dockerContainers: number;
-}
-
-const MAX_POINTS = 120;
-
-class MetricsHistory {
+class MetricsHistory_Test {
   private buffer: MetricPoint[] = [];
 
   push(point: MetricPoint) {

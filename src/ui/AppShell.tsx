@@ -51,22 +51,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="sidebar-footer">
-          <div className="sidebar-footer-title">Action recommandée</div>
-          <p>Nettoyage sécurisé des doublons, libération des ports secondaires et relance du profil principal.</p>
           <div className="stack">
             <button 
               className="button button-secondary" 
               onClick={() => void refresh()}
-              title="Force un scan complet de la machine (processus, ports, Docker, CPU, RAM)"
             >
-              Scanner maintenant
+              Scanner
             </button>
             <button 
               className="button button-primary" 
               onClick={() => void runAction("repair-now")}
-              title="Nettoie les doublons, libère les ports en conflit, et relance le profil principal"
             >
-              Réparer maintenant
+              Réparer
             </button>
           </div>
         </div>
@@ -75,34 +71,48 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <section className="content">
         <div className="window-drag-region" title="Drag window" />
         <header className="topbar">
-          <div>
-            <h1>Orchestra</h1>
-            <p>Voir ce qui tourne, ce qui bloque, et la prochaine action sûre à lancer.</p>
-          </div>
-          <div className="topbar-actions">
-            <button className="search-chip" title="Ouvrir le lanceur global (Cmd+Shift+Space)" onClick={() => void window.orchestra.toggleLauncher()}>
-              <Command size={15} />
-              <span>Ouvrir le lanceur</span>
-              <kbd>⌘⇧Space</kbd>
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <button 
+              className="button button-ghost"
+              onClick={() => void runAction("profile-run", { profileId: "dev-full" })}
+              disabled={actionInProgress === "profile-run"}
+              title="Démarre tous les services"
+            >
+              Dev Full
             </button>
             <button 
+              className="button button-ghost"
+              onClick={() => void runAction("profile-run", { profileId: "focus" })}
+              disabled={actionInProgress === "profile-run"}
+              title="Clawd + Orchestra uniquement"
+            >
+              Focus
+            </button>
+            <button 
+              className="button button-ghost"
+              onClick={() => void runAction("profile-run", { profileId: "minimal" })}
+              disabled={actionInProgress === "profile-run"}
+              title="Services critiques uniquement"
+            >
+              Minimal
+            </button>
+            <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.1)", margin: "0 8px" }} />
+            <button 
               className="button button-secondary" 
-              title="Force un scan complet de la machine (processus, ports, Docker, CPU, RAM)" 
               onClick={() => void runAction("doctor")}
               disabled={actionInProgress === "doctor"}
             >
               {actionInProgress === "doctor" ? (
                 <>
                   <Loader size={14} style={{ animation: "spin 1s linear infinite" }} />
-                  Scan en cours...
+                  Scan...
                 </>
               ) : (
-                "Scanner maintenant"
+                "Scanner"
               )}
             </button>
             <button 
               className="button button-primary" 
-              title="Nettoie les doublons, libère les ports en conflit, et relance le profil principal (action sécurisée)" 
               onClick={() => void runAction("repair-now")}
               disabled={actionInProgress === "repair-now"}
             >
@@ -112,26 +122,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   Réparation...
                 </>
               ) : (
-                "Réparer maintenant"
+                "Réparer"
               )}
             </button>
-            {simpleMode ? (
-              <button 
-                className="button button-ghost" 
-                title="Relance le profil 'focus' (start clawd-main + next-main, stop MCPs)" 
-                onClick={() => void runAction("profile-run", { profileId: "focus" })}
-              >
-                Relancer le profil
-              </button>
-            ) : (
-              <button 
-                className="button button-ghost" 
-                title="Récupération avancée : clean duplicates + clean zombies + free ports + relaunch focus (action destructive)" 
-                onClick={() => void runAction("recovery-run")}
-              >
-                Récupération avancée
-              </button>
-            )}
           </div>
         </header>
 

@@ -1,22 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { BaseAgent } from "../electron/agents/base-agent.js";
+import type { EventBus } from "../electron/agents/event-bus.js";
 
-type AgentState = "idle" | "running" | "stopped" | "error";
+class TestAgent extends BaseAgent {
+  public onInitCalled = false;
+  public onTickCalled = false;
+  public onCleanupCalled = false;
 
-const MAX_CONSECUTIVE_ERRORS = 5;
-const ERROR_BACKOFF_MS = 5_000;
+  protected async onInit() {
+    this.onInitCalled = true;
+  }
 
-interface EventBus {
-  on: (event: string, listener: (data: unknown) => void) => () => void;
-  emit: (event: string, data?: unknown) => void;
-}
+  protected async onTick() {
+    this.onTickCalled = true;
+  }
 
-interface RuntimeSnapshot {
-  metrics: unknown[];
-  alerts: unknown[];
-  services: unknown[];
-  ports: unknown[];
-  docker: unknown[];
-  logs: unknown[];
+  protected async onCleanup() {
+    this.onCleanupCalled = true;
+  }
 }
 
 abstract class TestBaseAgent {

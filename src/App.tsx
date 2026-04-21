@@ -75,7 +75,7 @@ export function App() {
   }, [refresh, setPath]);
 
   const effectivePath = useMemo(() => 
-    simpleMode && ["/services", "/incidents", "/ports", "/docker", "/logs", "/launcher"].includes(currentPath)
+    simpleMode && ["/services", "/incidents", "/ports", "/docker", "/logs", "/launcher", "/agents", "/history"].includes(currentPath)
       ? "/"
       : currentPath,
     [simpleMode, currentPath]

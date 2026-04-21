@@ -35,6 +35,7 @@ billingRouter.post("/create-checkout", async (req, res) => {
       success_url: `${process.env.FRONTEND_URL ?? "https://orchestra.dev"}/billing/success`,
       cancel_url: `${process.env.FRONTEND_URL ?? "https://orchestra.dev"}/billing/cancel`,
       client_reference_id: payload.sub,
+      metadata: { tier },
     });
 
     return res.json({ url: session.url, sessionId: session.id });
@@ -68,10 +69,12 @@ billingRouter.post("/webhook", raw({ type: "application/json" }), async (req, re
     const session = event.data.object as Stripe.Checkout.Session;
     const githubId = session.client_reference_id;
     const subscriptionId = typeof session.subscription === "string" ? session.subscription : null;
-    if (githubId && subscriptionId) {
+    const tier = session.metadata?.tier as "pro" | "team" | undefined;
+    
+    if (githubId && subscriptionId && tier) {
       const { error } = await supabase
         .from("users")
-        .update({ tier: "pro", stripe_subscription_id: subscriptionId })
+        .update({ tier, stripe_subscription_id: subscriptionId })
         .eq("github_id", githubId);
       if (error) console.error("[billing] failed to update user tier:", error.message);
     }

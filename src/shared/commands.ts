@@ -43,12 +43,12 @@ export const commandActions: CommandAction[] = [
     runActionId: "clean-zombies"
   },
   {
-    id: "free-port-default",
-    title: "Libérer le port par défaut",
-    subtitle: "Arrête le process qui écoute sur le port principal configuré",
-    category: "action",
-    risk: "guided",
-    runActionId: "free-port"
+    id: "goto-ports-page",
+    title: "Libérer un port",
+    subtitle: "Voir les ports occupés et libérer celui de ton choix",
+    category: "navigation",
+    risk: "safe",
+    navigateTo: "/ports"
   },
   {
     id: "profile-focus",

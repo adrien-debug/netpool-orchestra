@@ -153,6 +153,7 @@ function registerIpcHandlers() {
   ipcMain.removeHandler("orchestra:ai-remove-key");
   ipcMain.handle("orchestra:ai-remove-key", (_e, providerId: string) => {
     removeApiKey(providerId);
+    initAIProviders();
     return true;
   });
 

@@ -1,18 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { AIRouter } from "../electron/ai/router.js";
+import type { AIProvider, ChatMessage, ChatOptions } from "../electron/ai/provider.js";
 
-interface ChatMessage { role: string; content: string; }
-interface ChatResponse { content: string; finishReason: string; toolCalls?: unknown[]; }
-interface ChatOptions { systemPrompt?: string; }
-
-interface AIProvider {
-  id: string;
-  name: string;
-  available(): Promise<boolean>;
-  chat(messages: ChatMessage[], options?: ChatOptions): Promise<ChatResponse>;
-  chatStream(messages: ChatMessage[], options?: ChatOptions): AsyncIterable<string>;
-}
-
-class AIRouter {
+class AIRouter_Test {
   private providers = new Map<string, AIProvider>();
   private _activeId: string | null = null;
   private _fallbackId: string | null = null;

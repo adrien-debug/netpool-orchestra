@@ -5,10 +5,14 @@ import { supabase } from "../supabase.js";
 export const authRouter = Router();
 
 const JWT_SECRET = process.env.JWT_SECRET!;
-const GH_CLIENT_ID = process.env.GITHUB_CLIENT_ID!;
-const GH_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET!;
+const GH_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+const GH_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
 authRouter.post("/github", async (req, res) => {
+  if (!GH_CLIENT_ID || !GH_CLIENT_SECRET) {
+    return res.status(503).json({ error: "GitHub OAuth not configured" });
+  }
+
   const { code } = req.body as { code?: string };
   if (!code) return res.status(400).json({ error: "Missing code" });
 
